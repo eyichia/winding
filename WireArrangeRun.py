@@ -793,25 +793,26 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
                     /* 表格置中與樣式 */
                     table {{ 
                         border-collapse: collapse; 
-                        width: 90%; 
-                        margin: 20pt auto; 
+                        width: 100%;
+                        margin-top: 30pt;
+                        margin-bottom: 30pt;
                     }}
                     th, td {{
                         border: 1px solid #000000; 
-                        padding: 10pt; 
+                        padding: 15pt; 
                         text-align: center; 
-                        font-size: 14pt;
+                        font-size: 18pt;
                     }}
-                    th {{ background-color: #f2f2f2; font-weight: bold; }}
+                    th {{ background-color: #f2f2f2; font-weight: bold; font-size: 18pt; }}
                     .footer {{ text-align: right; font-size: 12pt; color: #555555; margin-top: 30pt; }}
                     .img-container {{ text-align: center; margin-top: 20pt; }}
                     .conclusion {{
                         width: 90%; 
                         margin: 20pt auto; 
-                        padding: 10pt; 
+                        padding: 15pt; 
                         border: 2pt solid #2c3e50; 
                         background-color: #f9f9f9; 
-                        font-size: 16pt;
+                        font-size: 18pt;
                     }}
                 </style>
             </head>
@@ -825,7 +826,7 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
                     <p><b>{self.get_msg('dev_label', '開發者')}:</b> {self.Developer}</p>
                 </div>    
                 <hr>
-                <table>
+                <table align="center" style="border-collapse: collapse; width: 90%; margin-top: 20pt; margin-bottom: 20pt;">
                     <tr>
                         <th>{self.get_msg('report_footer1', '方式')}</th>
                         <th>{self.get_msg('report_footer2', '總圈數')}</th>
@@ -836,7 +837,10 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
                 </table>
                 <div class="img-container">
                     <h3>排線示意圖</h3>
+                    <br>
                     <img src="diagram" width="300">
+                    <br>
+                    <hr>
                 </div>
                 <div class="footer">
                     <p>{self.get_msg('report_footer5', '本報告由排線工具自動生成')} | {self.version}</p>
@@ -1001,7 +1005,7 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
         ws['S1'] = f"{self.get_msg('diagram')}"
         ws['S1'].font = cell_font
         ws['S1'].alignment = center_align
-        
+
         if not self.languages: return
         lang = self.languages.get(self.current_lang, {}).get("Data1", {})
         headers = [
