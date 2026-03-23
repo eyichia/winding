@@ -34,7 +34,7 @@ from openpyxl.drawing.line import LineProperties
 from openpyxl.drawing.text import (Paragraph, ParagraphProperties, CharacterProperties, 
                                    Font as DrawingFont, RegularTextRun)
 
-from arrange0312_ui import Ui_Arrange
+from WireArrangeGUI_ui import Ui_Arrange
 from Sub.utils import show_prompt_window
 
 
@@ -205,9 +205,10 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
         self.PB_chart_A.clicked.connect(lambda: self.change_mode("ArrangeA.png", "Type A"))
         self.PB_chart_B.clicked.connect(lambda: self.change_mode("ArrangeB.png", "Type B"))
         self.PB_chart_C.clicked.connect(lambda: self.change_mode("ArrangeC.png", "Type C"))
-        self.PB_A_export_coordinates.clicked.connect(lambda: self.export_coordinates("A"))
-        self.PB_B_export_coordinates.clicked.connect(lambda: self.export_coordinates("B"))
-        self.PB_C_export_coordinates.clicked.connect(lambda: self.export_coordinates("C"))
+        self.PB_Export_coordinates.clicked.connect(self.export_coordinates)
+        #self.PB_A_export_coordinates.clicked.connect(lambda: self.export_coordinates("A"))
+        #self.PB_B_export_coordinates.clicked.connect(lambda: self.export_coordinates("B"))
+        #self.PB_C_export_coordinates.clicked.connect(lambda: self.export_coordinates("C"))
         self.PB_Calculate.clicked.connect(self.arrange_calculation)
         self.PB_Clear_process.clicked.connect(self.Process_clear)
         #檔案選項
@@ -879,7 +880,7 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
         if not file_path: return
 
         # 3. 建立活頁簿與工作表
-        wb = openpyxl.Workbook()
+        wb = Workbook()
         ws = wb.active
         ws.title = self.get_msg("xlsx_title", "排線計算摘要")
 
@@ -964,7 +965,7 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
             theme, font_size, icon_size = "default", 12, 64
             show_prompt_window(self, title, text, icon, buttons, theme, font_size, icon_size)
 # """ 輸出座標 Excel 試算表報表 """
-    def export_coordinates(self, type):
+    def export_coordinates(self):
         # 1. 檢查是否有計算結果
         if not hasattr(self, 'winding_results') or not self.winding_results:
             title, text = self.get_msg("fail"), self.get_msg("report_fail", "請先進行計算！")
@@ -977,211 +978,225 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
         if not file_path: return
 
         # 3. 直接建立新活頁簿 (取消模板判斷)
+        sheet_title = ["A", "B", "C"]
         sheet_name = self.get_msg("coordinates_title", "座標摘要")
         wb = Workbook()
-        ws = wb.active
-        ws.title = sheet_name
-
-        # 4. 定義樣式 (加粗、置中、框線)
-        header_font = Font(name='Microsoft YaHei', size=14, bold=True, color="FFFFFF")
-        cell_font = Font(name='Microsoft YaHei', size=12)
-        center_align = Alignment(horizontal='center', vertical='center')
-        header_fill = PatternFill(start_color="2C3E50", end_color="2C3E50", fill_type="solid")
-        thin_side = Side(border_style="thin", color="000000")
-        full_border = Border(top=thin_side, left=thin_side, right=thin_side, bottom=thin_side)
         
-        # 5. 寫入標題與表頭
-        ws.merge_cells('A1:B1') # 合併儲存格
-        ws['A1'] = f"{self.get_msg('report_footer1')} {type}"
-        ws['A1'].font = header_font
-        ws['A1'].fill = header_fill
-        ws['A1'].alignment = center_align
-        ws.merge_cells('A9:C9') # 合併儲存格
-        ws['A9'] = self.get_msg("coordinates", "座標(X,Y)")
-        ws['A9'].font = header_font
-        ws['A9'].fill = header_fill
-        ws['A9'].alignment = center_align
-
-        ws['S1'] = f"{self.get_msg('diagram')}"
-        ws['S1'].font = cell_font
-        ws['S1'].alignment = center_align
-
-        if not self.languages: return
-        lang = self.languages.get(self.current_lang, {}).get("Data1", {})
-        headers = [
-            self.get_msg("report_footer2", "總圈數"),
-            self.get_msg("report_footer3", "槽滿率"),
-            self.get_msg("report_footer4", "總層數"),
-            lang.get("lb_pa_001", {}).get("text", "線徑"),
-            lang.get("lb_pa_002", {}).get("text", "AB長度"),
-            lang.get("lb_pa_003", {}).get("text", "BC長度"),
-            lang.get("lb_pa_004", {}).get("text", "CD長度")
-        ]
-        for i in range(1, 4):
-            ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = 20 # 自動調整欄ABC位寬度
-        # col 行[直A,B,C...], row 列[橫1,2,3...]
-        # ws.cell(row=row, column=2, value=text) 
-        # 寫入「列 (Row)」：定住 row，讓 column 隨迴圈增加。
-        # 寫入「行 (Column)」：定住 column，讓 row 隨迴圈增加。
-        current_row = 2
-        for row, text in enumerate(headers, 1): # 處理A2~A8樣式 1>>從A欄
-            cell = ws.cell(row=current_row, column=1, value=text)
-            cell.font = cell_font         # 設定字體（如：微軟正黑體、加粗、白色）
-            cell.alignment = center_align   # 設定對齊（水平置中、垂直置中）
-            #cell.fill = header_fill         # 設定填充背景色（如：深藍色）
-            cell.border = full_border       # 設定框線（四邊加上細實線）
-            current_row += 1    
         
-        # 6. 寫入計算數據
-        res = self.winding_results.get(type, {})
-        total_layers = sum(1 for key in res.keys() if key.startswith('L'))
-        data = [
-            res.get("total_turns", 0),
-            f"{res.get('fill_rate', 0):.4f}%",
-            total_layers,
-            self.in_pa_001.value(),
-            self.in_pa_002.value(),
-            self.in_pa_003.value(),
-            self.in_pa_004.value()
-        ]
-        current_row = 2
-        for row, value in enumerate(data, 2): # 處理B2~B8樣式 2>>從B欄
-            cell = ws.cell(row=current_row, column=2, value=value)
-            cell.font = cell_font
-            cell.alignment = center_align
-            cell.border = full_border
-            current_row += 1   
+          
+
+        def set_sheet_contents(type):
+            # 4. 定義樣式 (加粗、置中、框線)
+            header_font = Font(name='Microsoft YaHei', size=14, bold=True, color="FFFFFF")
+            cell_font = Font(name='Microsoft YaHei', size=12)
+            center_align = Alignment(horizontal='center', vertical='center')
+            header_fill = PatternFill(start_color="2C3E50", end_color="2C3E50", fill_type="solid")
+            thin_side = Side(border_style="thin", color="000000")
+            full_border = Border(top=thin_side, left=thin_side, right=thin_side, bottom=thin_side)
         
-        # 7. 整理並寫入座標數據
-        coords_item = [[],[],[]]    
-        wire_diam = self.in_pa_001.value() # 直徑
-        row_count = 0
-        for i in range(1, total_layers+1):
-            layer_key = f"L{i}"
-            coords_x, coords_y, layer_turns = res[layer_key] # 取得座標X,Y與該總層圈數
-            if i % 2 == 0: coords_x = coords_x + (layer_turns - 1 ) * wire_diam # 奇偶數層 
+            # 5. 寫入標題與表頭
+            ws.merge_cells('A1:B1') # 合併儲存格
+            ws['A1'] = f"{self.get_msg('report_footer1')} {type}"
+            ws['A1'].font = header_font
+            ws['A1'].fill = header_fill
+            ws['A1'].alignment = center_align
+            ws.merge_cells('A9:C9') # 合併儲存格
+            ws['A9'] = self.get_msg("coordinates", "座標(X,Y)")
+            ws['A9'].font = header_font
+            ws['A9'].fill = header_fill
+            ws['A9'].alignment = center_align
 
-            if layer_key in res: # 確保 res 裡有這層資料再繼續
-                offset_x = 0
-                for j in range(1, int(layer_turns)+1):
-                    coords_item[0].append(f"{layer_key}-{j}")
-                    if not i % 2 == 0: # 奇數層 
-                        coords_item[1].append(round(coords_x + offset_x, 4))
-                    else: # 偶數層 
-                        coords_item[1].append(round(coords_x - offset_x, 4))
-                    coords_item[2].append(round(coords_y, 4))
-                    offset_x += wire_diam
-                    row_count += 1
+            ws['S1'] = f"{self.get_msg('diagram')}"
+            ws['S1'].font = cell_font
+            ws['S1'].alignment = center_align
 
-        start_row = 10
-        end_row = start_row + row_count - 1
-        for col_idx, sub_list in enumerate(coords_item, 1): # 處理A10~An樣式 1>>從A欄  
-            for row_offset, value in enumerate(sub_list):
-                # 計算實際行號：10 + 0, 10 + 1, 10 + 2...
-                target_row = start_row + row_offset  
-                # 寫入儲存格
-                cell = ws.cell(row=target_row, column=col_idx, value=value)
+            if not self.languages: return
+            lang = self.languages.get(self.current_lang, {}).get("Data1", {})
+            headers = [
+                self.get_msg("report_footer2", "總圈數"),
+                self.get_msg("report_footer3", "槽滿率"),
+                self.get_msg("report_footer4", "總層數"),
+                lang.get("lb_pa_001", {}).get("text", "線徑"),
+                lang.get("lb_pa_002", {}).get("text", "AB長度"),
+                lang.get("lb_pa_003", {}).get("text", "BC長度"),
+                lang.get("lb_pa_004", {}).get("text", "CD長度")
+            ]
+            for i in range(1, 4):
+                ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = 20 # 自動調整欄ABC位寬度
+            # col 行[直A,B,C...], row 列[橫1,2,3...]
+            # ws.cell(row=row, column=2, value=text) 
+            # 寫入「列 (Row)」：定住 row，讓 column 隨迴圈增加。
+            # 寫入「行 (Column)」：定住 column，讓 row 隨迴圈增加。
+            current_row = 2
+            for row, text in enumerate(headers, 1): # 處理A2~A8樣式 1>>從A欄
+                cell = ws.cell(row=current_row, column=1, value=text)
                 cell.font = cell_font         # 設定字體（如：微軟正黑體、加粗、白色）
                 cell.alignment = center_align   # 設定對齊（水平置中、垂直置中）
-        print(start_row,end_row)
-
-        # --- 8. 建立圖表 (樣式完全模擬模板) ---
-        x_values = Reference(ws, min_col=2, min_row=start_row, max_row=end_row)
-        y_values = Reference(ws, min_col=3, min_row=start_row, max_row=end_row)
-
-        chart = ScatterChart()
-        chart.scatterStyle = 'lineMarker'
-        chart.style = 2
-        chart.legend = None
-        chart.height = 18 # 18cm 在drawing1.xml <xdr:ext cx="7920000" cy="6480000"/>
-        chart.width = 22
-        # 先初始化標題，使其不再是 None】
-        chart.title = " " 
-        chart.x_axis.title = " "
-        chart.y_axis.title = " "
-
-        # 文字格式設定助手 (16pt, 微軟正黑體)
-        # # 注意寫在def export_coordinates裡面
-        def set_16pt_style(target, text):
-            font_style = DrawingFont(typeface='Microsoft YaHei')
-            cp = CharacterProperties(sz=1600, b=False, latin=font_style, ea=font_style)
-            pp = ParagraphProperties(defRPr=cp)
-            run = RegularTextRun(t=text)
-            rtp = Paragraph(pPr=pp, r=[run])
-            target.tx = Text(rich=RichText(p=[rtp]))
-
-        # 設定標題與軸名稱 (16pt)
-        set_16pt_style(chart.title, self.get_msg("chart_title", "排線路徑座標圖"))
-        set_16pt_style(chart.x_axis.title, self.get_msg("axis_x", "X 座標 (mm)"))
-        set_16pt_style(chart.y_axis.title, self.get_msg("axis_y", "Y 座標 (mm)"))
-
-        # 佈局與邊距設定
-        chart.layout = Layout(
-            manualLayout=ManualLayout(
-                x=0.15, y=0.10, h=0.75, w=0.85,
-                xMode="edge", yMode="edge", layoutTarget="inner"
-            )
-        )    
-
-        # 刻度標籤字體設定 (10pt)
-        tick_props = CharacterProperties(sz=1000)
-        tick_para = ParagraphProperties(defRPr=tick_props)
-        chart.x_axis.txPr = RichText(p=[Paragraph(pPr=tick_para, endParaRPr=tick_props)])
-        chart.y_axis.txPr = RichText(p=[Paragraph(pPr=tick_para, endParaRPr=tick_props)])
-        chart.x_axis.delete = False
-        chart.y_axis.delete = False
-
-        # 座標軸刻度邏輯
-        chart.x_axis.majorUnit = 0.5        # 主要刻度間隔: 0.5
-        chart.x_axis.minorUnit = 0.1        # 次要刻度間隔: 0.1
-        chart.x_axis.majorTickMark = 'cross' # 主要刻度線: 交叉
-        chart.x_axis.minorTickMark = 'in'    # 次要刻度線: 內側
-        chart.x_axis.tickLblPos = 'nextTo'   # 標籤位置: 軸旁
-        chart.x_axis.crosses = 'autoZero'    # 座標交叉點: 自動歸零
-        chart.x_axis.crossBetween = 'midCat'
-        chart.x_axis.number_format = '#,##0.0_);[Red]\(#,##0.0\)'
-        chart.x_axis.majorGridlines = None
+                #cell.fill = header_fill         # 設定填充背景色（如：深藍色）
+                cell.border = full_border       # 設定框線（四邊加上細實線）
+                current_row += 1    
         
-        chart.y_axis.majorUnit = 0.5        # 主要刻度間隔: 0.5
-        chart.y_axis.minorUnit = 0.1        # 次要刻度間隔: 0.1
-        chart.y_axis.majorTickMark = 'cross' # 主要刻度線: 交叉
-        chart.y_axis.minorTickMark = 'in'    # 次要刻度線: 內側
-        chart.y_axis.tickLblPos = 'nextTo'   # 標籤位置: 軸旁
-        chart.y_axis.crosses = 'autoZero'    # 座標交叉點: 自動歸零
-        chart.y_axis.number_format = '0.0'   # Y 軸數字格式：固定一位小數
-        # 格線設定：僅保留 Y 軸水平線 (0.5pt)
-        chart.y_axis.majorGridlines = ChartLines()
-        chart.y_axis.majorGridlines.spPr = GraphicalProperties(ln=LineProperties(w=6350))
-        chart.y_axis.majorGridlines.spPr = GraphicalProperties(ln=LineProperties(w=6350))
+            # 6. 寫入計算數據
+            res = self.winding_results.get(type, {})
+            total_layers = sum(1 for key in res.keys() if key.startswith('L'))
+            data = [
+                res.get("total_turns", 0),
+                f"{res.get('fill_rate', 0):.4f}%",
+                total_layers,
+                self.in_pa_001.value(),
+                self.in_pa_002.value(),
+                self.in_pa_003.value(),
+                self.in_pa_004.value()
+            ]
+            current_row = 2
+            for row, value in enumerate(data, 2): # 處理B2~B8樣式 2>>從B欄
+                cell = ws.cell(row=current_row, column=2, value=value)
+                cell.font = cell_font
+                cell.alignment = center_align
+                cell.border = full_border
+                current_row += 1   
+
+            # 7. 整理並寫入座標數據
+            coords_item = [[],[],[]]    
+            wire_diam = self.in_pa_001.value() # 直徑
+            row_count = 0
+            for i in range(1, total_layers+1):
+                layer_key = f"L{i}"
+                coords_x, coords_y, layer_turns = res[layer_key] # 取得座標X,Y與該總層圈數
+                if i % 2 == 0: coords_x = coords_x + (layer_turns - 1 ) * wire_diam # 奇偶數層 
+
+                if layer_key in res: # 確保 res 裡有這層資料再繼續
+                    offset_x = 0
+                    for j in range(1, int(layer_turns)+1):
+                        coords_item[0].append(f"{layer_key}-{j}")
+                        if not i % 2 == 0: # 奇數層 
+                            coords_item[1].append(round(coords_x + offset_x, 4))
+                        else: # 偶數層 
+                            coords_item[1].append(round(coords_x - offset_x, 4))
+                        coords_item[2].append(round(coords_y, 4))
+                        offset_x += wire_diam
+                        row_count += 1
+
+            start_row = 10
+            end_row = start_row + row_count - 1
+            for col_idx, sub_list in enumerate(coords_item, 1): # 處理A10~An樣式 1>>從A欄  
+                for row_offset, value in enumerate(sub_list):
+                    # 計算實際行號：10 + 0, 10 + 1, 10 + 2...
+                    target_row = start_row + row_offset  
+                    # 寫入儲存格
+                    cell = ws.cell(row=target_row, column=col_idx, value=value)
+                    cell.font = cell_font         # 設定字體（如：微軟正黑體、加粗、白色）
+                    cell.alignment = center_align   # 設定對齊（水平置中、垂直置中）
         
-        # 數據序列樣式
-        series = Series(y_values, x_values)
-        series.marker = Marker(symbol='circle', size=5)
-        line_color = "2E75B6"
-        series.smooth = False
-        series.graphicalProperties.line.solidFill = line_color
-        series.graphicalProperties.line.width = 19050 # 1.5pt
-        series.marker.graphicalProperties.solidFill = line_color
-        series.marker.graphicalProperties.line.solidFill = line_color
 
-        chart.series.append(series)
-        chart.varyColors = False
-        ws.add_chart(chart, "E2")
+            # --- 8. 建立圖表 (樣式完全模擬模板) ---
+            x_values = Reference(ws, min_col=2, min_row=start_row, max_row=end_row)
+            y_values = Reference(ws, min_col=3, min_row=start_row, max_row=end_row)
 
-        # 插入排線示意圖
-        current_pixmap = QPixmap(resource_path(f"Assets/Arrange{type}.png"))
-        if current_pixmap:
-            # 必須確保有 import openpyxl.drawing.image
-            ba = QByteArray()
-            buffer = QBuffer(ba)
-            buffer.open(QBuffer.WriteOnly)
-            # 將圖片存入 QBuffer
-            current_pixmap.toImage().save(buffer, "PNG")
-            # 交給 io.BytesIO，再由 ExcelImage (此時會呼叫 Pillow) 讀取
-            img_data = io.BytesIO(ba.data())
-            img = ExcelImage(img_data) # <--- 這裡會觸發對 Pillow 的呼叫
-            img.width, img.height = 600, 600
-            ws.add_image(img, 'S2')
+            chart = ScatterChart()
+            chart.scatterStyle = 'lineMarker'
+            chart.style = 2
+            chart.legend = None
+            chart.height = 18 # 18cm 在drawing1.xml <xdr:ext cx="7920000" cy="6480000"/>
+            chart.width = 22
+            # 先初始化標題，使其不再是 None】
+            chart.title = " " 
+            chart.x_axis.title = " "
+            chart.y_axis.title = " "
+
+            # 文字格式設定助手 (16pt, 微軟正黑體)
+            # # 注意寫在def export_coordinates裡面
+            def set_16pt_style(target, text):
+                font_style = DrawingFont(typeface='Microsoft YaHei')
+                cp = CharacterProperties(sz=1600, b=False, latin=font_style, ea=font_style)
+                pp = ParagraphProperties(defRPr=cp)
+                run = RegularTextRun(t=text)
+                rtp = Paragraph(pPr=pp, r=[run])
+                target.tx = Text(rich=RichText(p=[rtp]))
+
+            # 設定標題與軸名稱 (16pt)
+            set_16pt_style(chart.title, self.get_msg("chart_title", "排線路徑座標圖"))
+            set_16pt_style(chart.x_axis.title, self.get_msg("axis_x", "X 座標 (mm)"))
+            set_16pt_style(chart.y_axis.title, self.get_msg("axis_y", "Y 座標 (mm)"))
+
+            # 佈局與邊距設定
+            chart.layout = Layout(
+                manualLayout=ManualLayout(
+                    x=0.15, y=0.10, h=0.75, w=0.85,
+                    xMode="edge", yMode="edge", layoutTarget="inner"
+                )
+            )    
+
+            # 刻度標籤字體設定 (10pt)
+            tick_props = CharacterProperties(sz=1000)
+            tick_para = ParagraphProperties(defRPr=tick_props)
+            chart.x_axis.txPr = RichText(p=[Paragraph(pPr=tick_para, endParaRPr=tick_props)])
+            chart.y_axis.txPr = RichText(p=[Paragraph(pPr=tick_para, endParaRPr=tick_props)])
+            chart.x_axis.delete = False
+            chart.y_axis.delete = False
+
+            # 座標軸刻度邏輯
+            chart.x_axis.majorUnit = 0.5        # 主要刻度間隔: 0.5
+            chart.x_axis.minorUnit = 0.1        # 次要刻度間隔: 0.1
+            chart.x_axis.majorTickMark = 'cross' # 主要刻度線: 交叉
+            chart.x_axis.minorTickMark = 'in'    # 次要刻度線: 內側
+            chart.x_axis.tickLblPos = 'nextTo'   # 標籤位置: 軸旁
+            chart.x_axis.crosses = 'autoZero'    # 座標交叉點: 自動歸零
+            chart.x_axis.crossBetween = 'midCat'
+            chart.x_axis.number_format = '#,##0.0_);[Red]\(#,##0.0\)'
+            chart.x_axis.majorGridlines = None
+        
+            chart.y_axis.majorUnit = 0.5        # 主要刻度間隔: 0.5
+            chart.y_axis.minorUnit = 0.1        # 次要刻度間隔: 0.1
+            chart.y_axis.majorTickMark = 'cross' # 主要刻度線: 交叉
+            chart.y_axis.minorTickMark = 'in'    # 次要刻度線: 內側
+            chart.y_axis.tickLblPos = 'nextTo'   # 標籤位置: 軸旁
+            chart.y_axis.crosses = 'autoZero'    # 座標交叉點: 自動歸零
+            chart.y_axis.number_format = '0.0'   # Y 軸數字格式：固定一位小數
+            # 格線設定：僅保留 Y 軸水平線 (0.5pt)
+            chart.y_axis.majorGridlines = ChartLines()
+            chart.y_axis.majorGridlines.spPr = GraphicalProperties(ln=LineProperties(w=6350))
+            chart.y_axis.majorGridlines.spPr = GraphicalProperties(ln=LineProperties(w=6350))
+        
+            # 數據序列樣式
+            series = Series(y_values, x_values)
+            series.marker = Marker(symbol='circle', size=5)
+            line_color = "2E75B6"
+            series.smooth = False
+            series.graphicalProperties.line.solidFill = line_color
+            series.graphicalProperties.line.width = 19050 # 1.5pt
+            series.marker.graphicalProperties.solidFill = line_color
+            series.marker.graphicalProperties.line.solidFill = line_color
+
+            chart.series.append(series)
+            chart.varyColors = False
+            ws.add_chart(chart, "E2")
+
+            # 插入排線示意圖
+            current_pixmap = QPixmap(resource_path(f"Assets/Arrange{type}.png"))
+            if current_pixmap:
+                # 必須確保有 import openpyxl.drawing.image
+                ba = QByteArray()
+                buffer = QBuffer(ba)
+                buffer.open(QBuffer.WriteOnly)
+                # 將圖片存入 QBuffer
+                current_pixmap.toImage().save(buffer, "PNG")
+                # 交給 io.BytesIO，再由 ExcelImage (此時會呼叫 Pillow) 讀取
+                img_data = io.BytesIO(ba.data())
+                img = ExcelImage(img_data) # <--- 這裡會觸發對 Pillow 的呼叫
+                img.width, img.height = 600, 600
+                ws.add_image(img, 'S2')
+
+        for idx, title in enumerate(sheet_title):
+            if idx == 0: 
+                ws = wb.active
+                ws.title = f"{sheet_name}{title}"
+                set_sheet_contents(title)
+            else:
+                ws = wb.active
+                ws = wb.create_sheet(title=f"{sheet_name}{title}", index=idx)
+                set_sheet_contents(title)
+            print(ws)          
 
         
         

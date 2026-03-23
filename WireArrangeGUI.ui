@@ -1800,7 +1800,7 @@ QPushButton:pressed {
      <double>0.000000000000000</double>
     </property>
    </widget>
-   <widget class="QPushButton" name="PB_A_export_coordinates">
+   <widget class="QPushButton" name="PB_Export_coordinates">
     <property name="geometry">
      <rect>
       <x>705</x>
@@ -1858,126 +1858,6 @@ QPushButton:pressed {
     </property>
     <property name="text">
      <string>匯出A</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="PB_B_export_coordinates">
-    <property name="geometry">
-     <rect>
-      <x>705</x>
-      <y>400</y>
-      <width>150</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei</family>
-      <pointsize>14</pointsize>
-      <stylestrategy>PreferDefault</stylestrategy>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">/*border-width	邊框粗細	1px, 5px
-border-style	邊框樣式	solid (實線), dashed (虛線), dotted (點線)
-border-top-width	只設定上方邊框	2px
-border-radius	圓角程度	15px (半徑)
-font-family: &quot;Microsoft YaHei&quot;;
-font-size: 10; */ 
-/* 平時的樣式 */
-QPushButton {
-	border-style: solid; 
-	border-width: 1;
-	background-color: #B5B5B5;
-	border-top-color: white;
-	border-left-color: white;
-	border-bottom-color: black;
-	border-right-color: black;
-}
-
-/* 滑鼠移上去時 (:hover) */
-/*QPushButton:hover {
-    background-color: #e1f5fe;
-}*/
-
-/* 按下去的瞬間 (:pressed) */
-QPushButton:pressed {
-	border-style: solid; 
-	border-width: 1;
-	background-color: #999999;
-	border-top-color: black;
-	border-left-color: black;
-	border-bottom-color: white;
-	border-right-color: white;
-}</string>
-    </property>
-    <property name="text">
-     <string>匯出B</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="PB_C_export_coordinates">
-    <property name="geometry">
-     <rect>
-      <x>705</x>
-      <y>450</y>
-      <width>150</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei</family>
-      <pointsize>14</pointsize>
-      <stylestrategy>PreferDefault</stylestrategy>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">/*border-width	邊框粗細	1px, 5px
-border-style	邊框樣式	solid (實線), dashed (虛線), dotted (點線)
-border-top-width	只設定上方邊框	2px
-border-radius	圓角程度	15px (半徑)
-font-family: &quot;Microsoft YaHei&quot;;
-font-size: 10; */ 
-/* 平時的樣式 */
-QPushButton {
-	border-style: solid; 
-	border-width: 1;
-	background-color: #B5B5B5;
-	border-top-color: white;
-	border-left-color: white;
-	border-bottom-color: black;
-	border-right-color: black;
-}
-
-/* 滑鼠移上去時 (:hover) */
-/*QPushButton:hover {
-    background-color: #e1f5fe;
-}*/
-
-/* 按下去的瞬間 (:pressed) */
-QPushButton:pressed {
-	border-style: solid; 
-	border-width: 1;
-	background-color: #999999;
-	border-top-color: black;
-	border-left-color: black;
-	border-bottom-color: white;
-	border-right-color: white;
-}</string>
-    </property>
-    <property name="text">
-     <string>匯出C</string>
     </property>
    </widget>
   </widget>

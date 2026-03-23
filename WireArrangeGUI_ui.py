@@ -800,91 +800,13 @@ class Ui_Arrange(object):
         self.Slot_fill_rate.setSingleStep(0.000100000000000)
         self.Slot_fill_rate.setStepType(QAbstractSpinBox.StepType.DefaultStepType)
         self.Slot_fill_rate.setValue(0.000000000000000)
-        self.PB_A_export_coordinates = QPushButton(self.centralwidget)
-        self.PB_A_export_coordinates.setObjectName(u"PB_A_export_coordinates")
-        self.PB_A_export_coordinates.setGeometry(QRect(705, 350, 150, 40))
-        sizePolicy.setHeightForWidth(self.PB_A_export_coordinates.sizePolicy().hasHeightForWidth())
-        self.PB_A_export_coordinates.setSizePolicy(sizePolicy)
-        self.PB_A_export_coordinates.setFont(font2)
-        self.PB_A_export_coordinates.setStyleSheet(u"/*border-width	\u908a\u6846\u7c97\u7d30	1px, 5px\n"
-"border-style	\u908a\u6846\u6a23\u5f0f	solid (\u5be6\u7dda), dashed (\u865b\u7dda), dotted (\u9ede\u7dda)\n"
-"border-top-width	\u53ea\u8a2d\u5b9a\u4e0a\u65b9\u908a\u6846	2px\n"
-"border-radius	\u5713\u89d2\u7a0b\u5ea6	15px (\u534a\u5f91)\n"
-"font-family: \"Microsoft YaHei\";\n"
-"font-size: 10; */ \n"
-"/* \u5e73\u6642\u7684\u6a23\u5f0f */\n"
-"QPushButton {\n"
-"	border-style: solid; \n"
-"	border-width: 1;\n"
-"	background-color: #B5B5B5;\n"
-"	border-top-color: white;\n"
-"	border-left-color: white;\n"
-"	border-bottom-color: black;\n"
-"	border-right-color: black;\n"
-"}\n"
-"\n"
-"/* \u6ed1\u9f20\u79fb\u4e0a\u53bb\u6642 (:hover) */\n"
-"/*QPushButton:hover {\n"
-"    background-color: #e1f5fe;\n"
-"}*/\n"
-"\n"
-"/* \u6309\u4e0b\u53bb\u7684\u77ac\u9593 (:pressed) */\n"
-"QPushButton:pressed {\n"
-"	border-style: solid; \n"
-"	border-width: 1;\n"
-"	background-color: #999999;\n"
-"	border-top-color: black;\n"
-"	border-left-color: black;\n"
-"	border-bottom-color: white;\n"
-"	bord"
-                        "er-right-color: white;\n"
-"}")
-        self.PB_B_export_coordinates = QPushButton(self.centralwidget)
-        self.PB_B_export_coordinates.setObjectName(u"PB_B_export_coordinates")
-        self.PB_B_export_coordinates.setGeometry(QRect(705, 400, 150, 40))
-        sizePolicy.setHeightForWidth(self.PB_B_export_coordinates.sizePolicy().hasHeightForWidth())
-        self.PB_B_export_coordinates.setSizePolicy(sizePolicy)
-        self.PB_B_export_coordinates.setFont(font2)
-        self.PB_B_export_coordinates.setStyleSheet(u"/*border-width	\u908a\u6846\u7c97\u7d30	1px, 5px\n"
-"border-style	\u908a\u6846\u6a23\u5f0f	solid (\u5be6\u7dda), dashed (\u865b\u7dda), dotted (\u9ede\u7dda)\n"
-"border-top-width	\u53ea\u8a2d\u5b9a\u4e0a\u65b9\u908a\u6846	2px\n"
-"border-radius	\u5713\u89d2\u7a0b\u5ea6	15px (\u534a\u5f91)\n"
-"font-family: \"Microsoft YaHei\";\n"
-"font-size: 10; */ \n"
-"/* \u5e73\u6642\u7684\u6a23\u5f0f */\n"
-"QPushButton {\n"
-"	border-style: solid; \n"
-"	border-width: 1;\n"
-"	background-color: #B5B5B5;\n"
-"	border-top-color: white;\n"
-"	border-left-color: white;\n"
-"	border-bottom-color: black;\n"
-"	border-right-color: black;\n"
-"}\n"
-"\n"
-"/* \u6ed1\u9f20\u79fb\u4e0a\u53bb\u6642 (:hover) */\n"
-"/*QPushButton:hover {\n"
-"    background-color: #e1f5fe;\n"
-"}*/\n"
-"\n"
-"/* \u6309\u4e0b\u53bb\u7684\u77ac\u9593 (:pressed) */\n"
-"QPushButton:pressed {\n"
-"	border-style: solid; \n"
-"	border-width: 1;\n"
-"	background-color: #999999;\n"
-"	border-top-color: black;\n"
-"	border-left-color: black;\n"
-"	border-bottom-color: white;\n"
-"	bord"
-                        "er-right-color: white;\n"
-"}")
-        self.PB_C_export_coordinates = QPushButton(self.centralwidget)
-        self.PB_C_export_coordinates.setObjectName(u"PB_C_export_coordinates")
-        self.PB_C_export_coordinates.setGeometry(QRect(705, 450, 150, 40))
-        sizePolicy.setHeightForWidth(self.PB_C_export_coordinates.sizePolicy().hasHeightForWidth())
-        self.PB_C_export_coordinates.setSizePolicy(sizePolicy)
-        self.PB_C_export_coordinates.setFont(font2)
-        self.PB_C_export_coordinates.setStyleSheet(u"/*border-width	\u908a\u6846\u7c97\u7d30	1px, 5px\n"
+        self.PB_Export_coordinates = QPushButton(self.centralwidget)
+        self.PB_Export_coordinates.setObjectName(u"PB_Export_coordinates")
+        self.PB_Export_coordinates.setGeometry(QRect(705, 350, 150, 40))
+        sizePolicy.setHeightForWidth(self.PB_Export_coordinates.sizePolicy().hasHeightForWidth())
+        self.PB_Export_coordinates.setSizePolicy(sizePolicy)
+        self.PB_Export_coordinates.setFont(font2)
+        self.PB_Export_coordinates.setStyleSheet(u"/*border-width	\u908a\u6846\u7c97\u7d30	1px, 5px\n"
 "border-style	\u908a\u6846\u6a23\u5f0f	solid (\u5be6\u7dda), dashed (\u865b\u7dda), dotted (\u9ede\u7dda)\n"
 "border-top-width	\u53ea\u8a2d\u5b9a\u4e0a\u65b9\u908a\u6846	2px\n"
 "border-radius	\u5713\u89d2\u7a0b\u5ea6	15px (\u534a\u5f91)\n"
@@ -1047,9 +969,7 @@ class Ui_Arrange(object):
         self.label_2.setText(QCoreApplication.translate("Arrange", u"Usable area", None))
         self.PB_Clear_process.setText(QCoreApplication.translate("Arrange", u"\u6e05\u9664", None))
         self.label_3.setText(QCoreApplication.translate("Arrange", u"Slot fill rate", None))
-        self.PB_A_export_coordinates.setText(QCoreApplication.translate("Arrange", u"\u532f\u51faA", None))
-        self.PB_B_export_coordinates.setText(QCoreApplication.translate("Arrange", u"\u532f\u51faB", None))
-        self.PB_C_export_coordinates.setText(QCoreApplication.translate("Arrange", u"\u532f\u51faC", None))
+        self.PB_Export_coordinates.setText(QCoreApplication.translate("Arrange", u"\u532f\u51faA", None))
         self.File.setTitle(QCoreApplication.translate("Arrange", u"\u6a94\u6848", None))
         self.Export.setTitle(QCoreApplication.translate("Arrange", u"\u532f\u51fa\u5831\u544a", None))
         self.Save.setTitle(QCoreApplication.translate("Arrange", u"\u5132\u5b58\u53c3\u6578", None))

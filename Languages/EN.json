@@ -41,6 +41,7 @@
         "PB_chart_C": {"text": "Type C", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_Calculate": {"text": "Calculate", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_Clear_process": {"text": "Clear", "font_size": 14, "font_family": "Microsoft YaHei" },
+        "PB_Export_coordinates": {"text": "Export coords", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_A_export_coordinates": {"text": "Export A", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_B_export_coordinates": {"text": "Export B", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_C_export_coordinates": {"text": "Export C", "font_size": 14, "font_family": "Microsoft YaHei" }

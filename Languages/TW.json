@@ -41,6 +41,7 @@
         "PB_chart_C": {"text": "方式 C", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_Calculate": {"text": "計算", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_Clear_process": {"text": "清除", "font_size": 14, "font_family": "Microsoft YaHei" },
+        "PB_Export_coordinates": {"text": "匯出座標", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_A_export_coordinates": {"text": "匯出A", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_B_export_coordinates": {"text": "匯出B", "font_size": 14, "font_family": "Microsoft YaHei" },
         "PB_C_export_coordinates": {"text": "匯出C", "font_size": 14, "font_family": "Microsoft YaHei" }
