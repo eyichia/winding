@@ -989,12 +989,12 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
         # 5. 寫入標題與表頭
         ws.merge_cells('A1:B1') # 合併儲存格
         ws['A1'] = f"{self.get_msg('report_footer1')} {type}"
-        ws['A1'].font = Font(name='Microsoft YaHei', size=20, bold=True)
+        ws['A1'].font = header_font
         ws['A1'].fill = header_fill
         ws['A1'].alignment = center_align
         ws.merge_cells('A9:C9') # 合併儲存格
         ws['A9'] = self.get_msg("coordinates", "座標(X,Y)")
-        ws['A9'].font = Font(name='Microsoft YaHei', size=14, bold=True)
+        ws['A9'].font = header_font
         ws['A9'].fill = header_fill
         ws['A9'].alignment = center_align
         if not self.languages: return
