@@ -123,6 +123,7 @@
         "chart_title": "Cable Path Coordinate Plot",
         "axis_x": "X (mm)",
         "axis_y": "Y (mm)",
+        "diagram": "schematic diagram",
         "...": "..."
     }
 }

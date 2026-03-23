@@ -123,6 +123,7 @@
         "chart_title": "排线路径座标图",
         "axis_x": "X 座标 (mm)",
         "axis_y": "Y 座标 (mm)",
+        "diagram": "示意图",
         "...": "..."
     }
 }

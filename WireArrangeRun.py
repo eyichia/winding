@@ -997,6 +997,11 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
         ws['A9'].font = header_font
         ws['A9'].fill = header_fill
         ws['A9'].alignment = center_align
+
+        ws['S1'] = f"{self.get_msg('diagram')}"
+        ws['S1'].font = cell_font
+        ws['S1'].alignment = center_align
+        
         if not self.languages: return
         lang = self.languages.get(self.current_lang, {}).get("Data1", {})
         headers = [
@@ -1154,10 +1159,28 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
         series.graphicalProperties.line.width = 19050 # 1.5pt
         series.marker.graphicalProperties.solidFill = line_color
         series.marker.graphicalProperties.line.solidFill = line_color
-        
+
         chart.series.append(series)
         chart.varyColors = False
         ws.add_chart(chart, "E2")
+
+        # 插入排線示意圖
+        current_pixmap = QPixmap(resource_path(f"Assets/Arrange{type}.png"))
+        if current_pixmap:
+            # 必須確保有 import openpyxl.drawing.image
+            ba = QByteArray()
+            buffer = QBuffer(ba)
+            buffer.open(QBuffer.WriteOnly)
+            # 將圖片存入 QBuffer
+            current_pixmap.toImage().save(buffer, "PNG")
+            # 交給 io.BytesIO，再由 ExcelImage (此時會呼叫 Pillow) 讀取
+            img_data = io.BytesIO(ba.data())
+            img = ExcelImage(img_data) # <--- 這裡會觸發對 Pillow 的呼叫
+            img.width, img.height = 600, 600
+            ws.add_image(img, 'S2')
+
+        
+        
        
         # 8. 儲存檔案
         try:
