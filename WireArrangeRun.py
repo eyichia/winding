@@ -59,6 +59,7 @@ class MyMainWindow(QMainWindow, Ui_Arrange):
     ver_date = " 2026-03-19"
     Copyright = f" 2026 {Developer}" #" 2026 " + Developer
     
+    
 # """initial"""
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)

@@ -29,7 +29,7 @@
 
 ```text
 .
-├── WireArrangeRun260320v4.py  # 主程式邏輯
+├── WireArrangeRun260320v4.py  # 主程式邏輯Antigravity
 ├── arrange0312_ui.py          # UI 介面定義檔
 ├── Assets/                    # 圖片資源 (Logo, 示意圖)
 ├── Languages/                 # 語系 JSON 檔案
